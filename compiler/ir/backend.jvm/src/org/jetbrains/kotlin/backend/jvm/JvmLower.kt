@@ -99,10 +99,11 @@ private val lateinitUsageLoweringPhase = makeIrFilePhase(
     description = "Insert checks for lateinit field references"
 )
 
-private val propertiesPhase = makeIrFilePhase(
+internal val propertiesPhase = makeIrFilePhase(
     ::JvmPropertiesLowering,
     name = "Properties",
-    description = "Move fields and accessors for properties to their classes, and create synthetic methods for property annotations",
+    description = "Move fields and accessors for properties to their classes, replace calls to default property accessors " +
+            "with field accesses, remove unused accessors and create synthetic methods for property annotations",
     stickyPostconditions = setOf((PropertiesLowering)::checkNoProperties)
 )
 
@@ -293,9 +294,8 @@ private val jvmFilePhases =
         inlineCallableReferenceToLambdaPhase then
         propertyReferencePhase then
         constPhase then
-        propertiesToFieldsPhase then
-        remapObjectFieldAccesses then
         propertiesPhase then
+        remapObjectFieldAccesses then
         anonymousObjectSuperConstructorPhase then
         tailrecPhase then
 
