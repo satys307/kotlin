@@ -18,12 +18,15 @@ import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.publish.tasks.GenerateModuleMetadata
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.Upload
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
+import org.gradle.plugins.signing.SigningExtension
+import org.gradle.plugins.signing.SigningPlugin
 
 
 private const val MAGIC_DO_NOT_CHANGE_TEST_JAR_TASK_NAME = "testJar"
@@ -180,6 +183,7 @@ fun Project.standardPublicJars() {
 
 fun Project.publish(moduleMetadata: Boolean = false) {
     apply<MavenPublishPlugin>()
+    apply<SigningPlugin>()
 
     if (!moduleMetadata) {
         tasks.withType<GenerateModuleMetadata> {
@@ -249,13 +253,43 @@ fun Project.publish(moduleMetadata: Boolean = false) {
 
         repositories {
             maven {
+                name = "Maven"
                 url = file("${project.rootDir}/build/repo").toURI()
             }
         }
     }
 
+    configure<SigningExtension> {
+        setRequired(provider {
+            project.findProperty("signingRequired")?.toString()?.toBoolean()
+                ?: project.property("isSonatypeRelease") as Boolean
+        })
+
+        sign(extensions.getByType<PublishingExtension>().publications["Main"])
+    }
+
     tasks.register("install") {
         dependsOn(tasks.named("publishToMavenLocal"))
+    }
+
+    tasks.named<PublishToMavenRepository>("publishMainPublicationToMavenRepository") {
+        dependsOn(project.rootProject.tasks.named("preparePublication"))
+        doFirst {
+            val preparePublication = project.rootProject.tasks.named("preparePublication").get()
+            val username: String? by preparePublication.extra
+            val password: String? by preparePublication.extra
+            val repoUrl: String by preparePublication.extra
+
+            repository.apply {
+                url = uri(repoUrl)
+                if (url.scheme != "file" && username != null && password != null) {
+                    credentials {
+                        this.username = username
+                        this.password = password
+                    }
+                }
+            }
+        }
     }
 }
 
