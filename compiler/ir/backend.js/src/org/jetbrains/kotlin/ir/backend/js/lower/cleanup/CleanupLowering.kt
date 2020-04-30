@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.ir.backend.js.lower.cleanup
 
 import org.jetbrains.kotlin.backend.common.BodyLoweringPass
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.backend.js.utils.isPure
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.expressions.*
@@ -62,7 +63,7 @@ private class CodeCleaner : IrElementVisitorVoid {
                 unreachable -> false
                 it is IrExpression && it.isPure(true) -> false
                 else -> {
-                    unreachable = it is IrExpression && it.type.isNothing()
+                    unreachable = it.doesNotTerminate()
                     true
                 }
             }
@@ -71,6 +72,29 @@ private class CodeCleaner : IrElementVisitorVoid {
         statements.clear()
 
         statements += newStatements
+    }
+
+    // Checks if it is safe to assume the statement doesn't terminate (e.g. throws an exception)
+    // Takes into account cases like `fun <T> foo(): T = Any() as T`, which could be used as `foo<Nothing>()` and terminate despite the call type `Nothing`.
+    // Assumes that only functions with explicit return type `Nothing` do not terminate.
+    // Also see KotlinNothingValueExceptionLowering.kt
+    private fun IrStatement.doesNotTerminate(): Boolean {
+        if (this !is IrExpression || !type.isNothing()) return false
+
+        var hasFakeNothingCalls = false
+
+        acceptVoid(object : IrElementVisitorVoid {
+            override fun visitElement(element: IrElement) {
+                element.acceptChildrenVoid(this)
+            }
+
+            override fun visitCall(expression: IrCall) {
+                super.visitCall(expression)
+                hasFakeNothingCalls = hasFakeNothingCalls || expression.type.isNothing() && !expression.symbol.owner.returnType.isNothing()
+            }
+        })
+
+        return !hasFakeNothingCalls
     }
 
     override fun visitElement(element: IrElement) {
