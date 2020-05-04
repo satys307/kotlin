@@ -7,8 +7,8 @@ description = 'Kotlin Standard Library for JS'
 apply plugin: 'kotlin-platform-js'
 apply plugin: 'idea'
 
-// TODO: Migrate to maven-publish publishing
-configureLegacyPublishing(project)
+configurePublishing(project)
+configureJavadocJar()
 
 configurations {
     sources
@@ -306,13 +306,10 @@ task distSourcesJar(type: Jar) {
     }
 }
 
-def javadocJar = configureJavadocJar()
-
 artifacts {
     runtime libraryJarWithIr
-    publishedArtifacts libraryJarWithIr
-    publishedArtifacts sourcesJar
-    publishedArtifacts javadocJar
+    publishedLibrary libraryJarWithIr
+    publishedLibrary sourcesJar
     sources sourcesJar
     distSources distSourcesJar
     distLibrary libraryJarWithoutIr
@@ -320,14 +317,6 @@ artifacts {
     compileJs.outputs.files.forEach { artifact ->
         distJs(artifact) { builtBy(compileJs) }
     }
-}
-
-uploadArchives {
-    configuration = configurations.publishedArtifacts
-}
-
-install {
-    configuration = configurations.publishedArtifacts
 }
 
 node {
