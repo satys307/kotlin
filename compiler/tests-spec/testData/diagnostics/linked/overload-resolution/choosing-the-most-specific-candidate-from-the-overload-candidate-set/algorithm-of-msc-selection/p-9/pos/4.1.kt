@@ -128,3 +128,47 @@ class Case7 {
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>list.foo(1, 1)<!>
     }
 }
+
+// TESTCASE NUMBER: 8
+class Case8() {
+    fun foo(x: Int, y: Number?): Unit = TODO() // (1)
+    fun foo(vararg x: Int): String = TODO()//(2)
+}
+
+fun testcase8(case: Case8) {
+    case.<!DEBUG_INFO_CALL("fqName: Case8.foo; typeCall: function")!>foo(1, 1)<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>case.foo(1, 1)<!>
+}
+
+// TESTCASE NUMBER: 9
+class Case9() {
+    fun xoo(y: Int, x: Byte): Unit = TODO() // (2.1)
+    fun xoo(y: Int, vararg x: Int): String = TODO()// (2.2)
+}
+
+fun testcase9(case: Case9) {
+    case.<!DEBUG_INFO_CALL("fqName: Case9.xoo; typeCall: function")!>xoo(1, 1)<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>case.xoo(1, 1)<!>
+}
+
+// TESTCASE NUMBER: 10
+class Case10() {
+    fun xoo(y: Int, x: Byte): Unit = TODO() // (2.1)
+    fun xoo(vararg x: Int): String = TODO()// (2.2)
+}
+
+fun testcase10(case: Case10) {
+    case.<!DEBUG_INFO_CALL("fqName: Case10.xoo; typeCall: function")!>xoo(1, 1)<!>
+    case.<!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>xoo(1, 1)<!>
+}
+
+// TESTCASE NUMBER: 11
+class Case11() {
+    fun xoo(y: Int, x: Number): Unit = TODO() // (2.1)
+    fun xoo(vararg x: Int): String = TODO()// (2.2)
+}
+
+fun testcase11(case: Case11) {
+    case.<!DEBUG_INFO_CALL("fqName: Case11.xoo; typeCall: function")!>xoo(1, 1)<!>
+    <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.String")!>case.xoo(1, 1)<!>
+}

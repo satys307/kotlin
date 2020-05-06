@@ -16,7 +16,7 @@
       "1": [
         {
           "specVersion": "0.1-366",
-          "casesNumber": 4,
+          "casesNumber": 6,
           "description": "The most specific callable can forward itself to any other callable from the overload candidate set, while the opposite is not true.",
           "unexpectedBehaviour": false
         }
