@@ -56,9 +56,15 @@ abstract class JvmPackagePartProviderBase<MappingsKey> : PackagePartProvider, Me
 
     override fun getAllOptionalAnnotationClasses(): List<ClassData> =
         loadedModules.flatMap { module ->
-            val data = module.mapping.moduleData
-            data.optionalAnnotations.map { proto ->
-                ClassData(data.nameResolver, proto, module.mapping.version, SourceElement.NO_SOURCE)
+            getAllOptionalAnnotationClasses(module.mapping)
+        }
+
+    companion object {
+        fun getAllOptionalAnnotationClasses(module: ModuleMapping): List<ClassData> {
+            val data = module.moduleData
+            return data.optionalAnnotations.map { proto ->
+                ClassData(data.nameResolver, proto, module.version, SourceElement.NO_SOURCE)
             }
         }
+    }
 }

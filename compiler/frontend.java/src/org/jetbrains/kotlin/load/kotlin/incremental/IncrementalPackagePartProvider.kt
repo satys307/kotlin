@@ -16,11 +16,10 @@
 
 package org.jetbrains.kotlin.load.kotlin.incremental
 
-import org.jetbrains.kotlin.descriptors.SourceElement
+import org.jetbrains.kotlin.load.kotlin.JvmPackagePartProviderBase
 import org.jetbrains.kotlin.load.kotlin.PackagePartProvider
 import org.jetbrains.kotlin.load.kotlin.incremental.components.IncrementalCache
 import org.jetbrains.kotlin.load.kotlin.loadModuleMapping
-import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmMetadataVersion
 import org.jetbrains.kotlin.metadata.jvm.deserialization.ModuleMapping
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.serialization.deserialization.ClassData
@@ -52,12 +51,7 @@ class IncrementalPackagePartProvider(
         return parent.getAnnotationsOnBinaryModule(moduleName)
     }
 
-    override fun getAllOptionalAnnotationClasses(): List<ClassData> {
-        return moduleMappings().flatMap {
-            val data = it.moduleData
-            data.optionalAnnotations.map { proto ->
-                ClassData(data.nameResolver, proto, JvmMetadataVersion.INSTANCE, SourceElement.NO_SOURCE)
-            }
-        } + parent.getAllOptionalAnnotationClasses()
-    }
+    override fun getAllOptionalAnnotationClasses(): List<ClassData> =
+        moduleMappings().flatMap((JvmPackagePartProviderBase)::getAllOptionalAnnotationClasses) +
+                parent.getAllOptionalAnnotationClasses()
 }
