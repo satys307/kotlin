@@ -365,7 +365,7 @@ private fun toQualifiedName(userType: KtUserType): FqName? {
 
 internal fun ConstantValue<*>.createPsiLiteral(parent: PsiElement): PsiExpression? {
     val asString = asStringForPsiLiteral(parent)
-    val instance = PsiElementFactory.SERVICE.getInstance(parent.project)
+    val instance = PsiElementFactory.getInstance(parent.project)
     return try {
         instance.createExpressionFromText(asString, parent)
     } catch (_: IncorrectOperationException) {
