@@ -8,6 +8,3 @@ sourceSets {
     "main" { projectDefault() }
     "test" { none() }
 }
-
-publish()
-runtimeJar()
