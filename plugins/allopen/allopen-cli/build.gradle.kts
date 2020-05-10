@@ -1,6 +1,3 @@
-
-description = "Kotlin AllOpen Compiler Plugin"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

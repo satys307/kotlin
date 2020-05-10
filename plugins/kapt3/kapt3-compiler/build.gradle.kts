@@ -1,4 +1,3 @@
-
 description = "Annotation Processor for Kotlin"
 
 plugins {

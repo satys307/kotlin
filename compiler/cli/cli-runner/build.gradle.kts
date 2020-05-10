@@ -1,6 +1,3 @@
-
-description = "Kotlin Runner"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

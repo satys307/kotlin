@@ -1,5 +1,3 @@
-description = "Kotlin JPS plugin"
-
 plugins {
     java
 }

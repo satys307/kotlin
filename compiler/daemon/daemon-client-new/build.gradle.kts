@@ -1,7 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-description = "Kotlin Daemon Client New"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

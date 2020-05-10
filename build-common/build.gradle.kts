@@ -1,5 +1,3 @@
-description = "Kotlin Build Common"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

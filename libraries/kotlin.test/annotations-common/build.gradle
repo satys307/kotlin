@@ -1,5 +1,3 @@
-description = 'Kotlin Test Annotations Common'
-
 apply plugin: 'kotlin-platform-common'
 
 configurePublishing(project)

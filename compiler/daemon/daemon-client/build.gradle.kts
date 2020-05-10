@@ -1,5 +1,3 @@
-description = "Kotlin Daemon Client"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

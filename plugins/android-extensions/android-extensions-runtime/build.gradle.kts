@@ -1,5 +1,3 @@
-description = "Kotlin Android Extensions Runtime"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

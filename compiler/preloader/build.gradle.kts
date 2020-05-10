@@ -1,6 +1,3 @@
-
-description = "Kotlin Preloader"
-
 plugins {
     kotlin("jvm")
     id("jps-compatible")

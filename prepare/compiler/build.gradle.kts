@@ -1,8 +1,5 @@
 @file:Suppress("HasPlatformType")
-
 import java.util.regex.Pattern.quote
-
-description = "Kotlin Compiler"
 
 plugins {
     // HACK: java plugin makes idea import dependencies on this project as source (with empty sources however),

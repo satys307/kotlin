@@ -1,5 +1,3 @@
-description = 'Kotlin Test Common'
-
 apply plugin: 'kotlin-platform-common'
 
 configurePublishing(project)

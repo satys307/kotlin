@@ -1,5 +1,3 @@
-description = "Kotlin compiler client embeddable"
-
 plugins {
     kotlin("jvm")
 }
