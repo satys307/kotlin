@@ -1,5 +1,6 @@
-// !LANGUAGE: +ProperArrayConventionSetterWithDefaultCalls
+// IGNORE_BACKEND: JVM_IR
 // IGNORE_BACKEND_FIR: JVM_IR
+// TARGET_BACKEND: JVM_OLD
 var result = "fail"
 
 class A {
@@ -14,5 +15,5 @@ class A {
 
 fun box(): String {
     A()[1] = "OK"
-    return if (result != "11OK") "fail: $result" else "OK"
+    return if (result != "10OK") "fail: $result" else "OK"
 }
